@@ -1,18 +1,26 @@
-package com.xxm.springmvc;
+package com.xxm.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.xxm.pojo.Student;
+import com.xxm.service.impl.StudentServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 import net.sf.json.JSONObject;
 
 @Controller       //这个注解就是Controller的注解，加了这个注解，就相当于以前的servlet
 public class DemoController {
+
+	@Autowired
+	public StudentServiceImpl studentService;
+
 
 	//第一种，返回值是视图，视图就是jsp或者html
 	//下面这个RequestMapping注解是代表url的请求路径映射，因为在springmvc.xml里配置了视图解析器，所以会自动找到配置目录里的welcome.jsp
@@ -52,4 +60,21 @@ public class DemoController {
 		
 		return jsonObject;
 	}
+
+
+	/**
+	 * json格式的数据建议用格式化工具查看  https://www.sojson.com/simple_json.html 这个地址就可以，把数据复制到左边
+	 * @return
+	 */
+	@RequestMapping(value = "/getStudent" , method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getStudent(){
+		JSONObject jsonObject = new JSONObject();
+		List<Student> list = studentService.getStudentList();
+		jsonObject.put("status","success");
+		jsonObject.put("code",200);
+		jsonObject.put("data",list);
+		return jsonObject;
+	}
+
 }
